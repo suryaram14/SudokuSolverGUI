@@ -44,12 +44,12 @@ public class SudokuGrid extends Application{
 		
 		// construct a new clear button
 		// construct a vbox and put button inside of vbox area
-		// position button towards bottom right under the grid
+		// position button towards bottom right under the grid, next to solve_button
 		// when clicked on, all the text fields will become blank
 		Button clear_button = new Button("Clear Board");
 		VBox vBox = new VBox(15);
 		vBox.getChildren().add(clear_button);
-		vBox.setAlignment(Pos.BOTTOM_RIGHT);
+		vBox.setAlignment(Pos.BOTTOM_LEFT);
 		grid.add(vBox, 5, 11, 3, 1);
 		
 		
@@ -60,7 +60,7 @@ public class SudokuGrid extends Application{
 				for(int row = 0; row < 9; row++) {
 					for(int col = 0; col < 9; col++) {
 						txt_field[row][col].setText("");
-						
+						txt_field[row][col].setStyle("-fx-background-color:rgb(255,255,255)");
 					}
 				}
 			}		
@@ -72,6 +72,8 @@ public class SudokuGrid extends Application{
 		// construct a vbox and put button inside of vbox area
 		// position button towards bottom right under the grid
 		// when clicked on, the board will solve with the help of the SudokuSolver class
+		// if grid can be solved, numbers will be input automatically and will be highlighted green
+		// if grid can't be solved, empty grids will be highlighted red
 		Button solve_button = new Button("Solve Board");
 		VBox VBox = new VBox(15);
 		VBox.getChildren().add(solve_button);
@@ -83,9 +85,32 @@ public class SudokuGrid extends Application{
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
+				SudokuSolver sudokuSolver = new SudokuSolver();
+				SudokuBoard originalBoard = new SudokuBoard();
 				for(int row = 0; row < 9; row++) {
 					for(int col = 0; col < 9; col++) {
-						
+						try {
+						Integer num = Integer.valueOf(txt_field[row][col].getText().trim());
+						originalBoard.setSudokuBoard(row, col, num);
+						}
+						catch(NumberFormatException e) {
+						}
+					}
+				}
+				
+				SudokuBoard solution = sudokuSolver.solver(originalBoard);
+				
+				for(int row = 0; row < 9; row++) {
+					for(int col = 0; col < 9; col++) {
+						if(txt_field[row][col].getText().trim().equals("")) {
+							if(solution == null) {
+								txt_field[row][col].setStyle("-fx-background-color:rgb(255,0,0)");
+							}
+							else {
+								txt_field[row][col].setStyle("-fx-background-color:rgb(0,255,0)");
+								txt_field[row][col].setText("" + solution.getSudokuBoard(row, col));
+							}
+						}
 					}
 				}
 			}

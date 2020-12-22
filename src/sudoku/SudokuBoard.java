@@ -6,7 +6,18 @@ public class SudokuBoard {
 
 	public SudokuBoard() {
 	}
-
+	
+	// constructor for original board we input
+	public SudokuBoard(SudokuBoard originalBoard) {
+		// TODO Auto-generated constructor stub
+		for(int row = 0; row < 9; row++) {
+			for(int col = 0; col < 9; col++) {
+				sudokuBoard[row][col] = originalBoard.getSudokuBoard(row, col);
+			}
+		}
+	}
+	
+	// getter and setter for instance variable created above
 	public Integer getSudokuBoard(int row, int col) {
 		return sudokuBoard[row][col];
 	}
